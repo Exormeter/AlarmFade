@@ -2,6 +2,7 @@
 #define settingsPath [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.exormeter.alarmfade.plist"]
 #define LOWEST_POSSIBLE_VOLUME 0.0625
 #define DEFAULT_VOLUME 0.5
+#define DEFAULT_FADE 120
 #define TIMER_INTERVAL 1.0
 
 
@@ -48,8 +49,8 @@
 
     self.isEnabled = true;
     self.fadeIsEnabled = true;
-    self.fadeSeconds = 120;
-    self.maxVolume = 0.5;
+    self.fadeSeconds = DEFAULT_FADE;
+    self.maxVolume = DEFAULT_VOLUME;
     return %orig;
 }
 
