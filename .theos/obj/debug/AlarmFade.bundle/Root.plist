@@ -8,7 +8,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Enable AlarmFade</string>
+			<string>Enable Alarm</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -18,7 +18,7 @@
 			<key>defaults</key>
 			<string>com.exormeter.alarmfade</string>
 			<key>key</key>
-			<string>isEnabled</string>
+			<string>isEnabledForAlarm</string>
 			<key>label</key>
 			<string>Enable</string>
 		</dict>
@@ -26,7 +26,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>General settings</string>
+			<string>Alarm settings</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -36,7 +36,7 @@
 			<key>defaults</key>
 			<string>com.exormeter.alarmfade</string> <!-- Your package name here -->
 			<key>key</key>
-			<string>maxVolume</string> <!-- Your key name here -->
+			<string>maxVolumeAlarm</string> <!-- Your key name here -->
 			<key>max</key>
 			<real>0.99</real> <!-- Enter your maximum value here -->
 			<key>min</key>
@@ -52,7 +52,7 @@
 			<key>defaults</key>
 			<string>com.exormeter.alarmfade</string>
 			<key>key</key>
-			<string>fadeIsEnabled</string>
+			<string>fadeIsEnabledForAlarm</string>
 			<key>label</key>
 			<string>Enable Fade-In</string>
 		</dict>
@@ -64,7 +64,79 @@
 			<key>detail</key>
 			<string>PSDetailController</string>
 			<key>key</key>
-			<string>fadein</string>
+			<string>fadeInSecondsAlarm</string>
+			<key>label</key>
+			<string>Fade Duration</string>
+			<key>placeholder</key>
+			<string>120 seconds</string>
+			<key>keyboard</key>
+    		<string>phone</string>
+		</dict>
+
+
+
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Enable Timer</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.exormeter.alarmfade</string>
+			<key>key</key>
+			<string>isEnabledForTimer</string>
+			<key>label</key>
+			<string>Enable</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Timer settings</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<real>0.5</real> <!-- Default value of the slider -->
+			<key>defaults</key>
+			<string>com.exormeter.alarmfade</string> <!-- Your package name here -->
+			<key>key</key>
+			<string>maxVolumeTimer</string> <!-- Your key name here -->
+			<key>max</key>
+			<real>0.99</real> <!-- Enter your maximum value here -->
+			<key>min</key>
+			<real>0.07</real> <!-- Enter your minimum value here -->
+			<key>showValue</key> <!-- Show the value of the slider. true or false. -->
+			<false/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.exormeter.alarmfade</string>
+			<key>key</key>
+			<string>fadeIsEnabledForTimer</string>
+			<key>label</key>
+			<string>Enable Fade-In</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>defaults</key>
+			<string>com.exormeter.alarmfade</string>
+			<key>detail</key>
+			<string>PSDetailController</string>
+			<key>key</key>
+			<string>fadeInSecondsTimer</string>
 			<key>label</key>
 			<string>Fade Duration</string>
 			<key>placeholder</key>
