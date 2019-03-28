@@ -1,9 +1,10 @@
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = AlarmFade
-AlarmFade_FILES = AFRootListController.m
+AlarmFade_FILES = AFRootListController.m AlarmRootListController.m TimerRootListController.m
 AlarmFade_INSTALL_PATH = /Library/PreferenceBundles
 AlarmFade_FRAMEWORKS = UIKit
+AlarmFade_EXTRA_FRAMEWORKS += Cephei, CepheiPrefs
 AlarmFade_PRIVATE_FRAMEWORKS = Preferences
 
 include $(THEOS_MAKE_PATH)/bundle.mk

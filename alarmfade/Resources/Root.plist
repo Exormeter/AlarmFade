@@ -4,146 +4,54 @@
 <dict>
 	<key>items</key>
 	<array>
+	
 		<dict>
 			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Enable Alarm</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<true/>
-			<key>defaults</key>
-			<string>com.exormeter.alarmfade</string>
-			<key>key</key>
-			<string>isEnabledForAlarm</string>
-			<key>label</key>
-			<string>Enable</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Alarm settings</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSliderCell</string>
-			<key>default</key>
-			<real>0.5</real> <!-- Default value of the slider -->
-			<key>defaults</key>
-			<string>com.exormeter.alarmfade</string> <!-- Your package name here -->
-			<key>key</key>
-			<string>maxVolumeAlarm</string> <!-- Your key name here -->
-			<key>max</key>
-			<real>0.99</real> <!-- Enter your maximum value here -->
-			<key>min</key>
-			<real>0.07</real> <!-- Enter your minimum value here -->
-			<key>showValue</key> <!-- Show the value of the slider. true or false. -->
-			<false/>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<true/>
-			<key>defaults</key>
-			<string>com.exormeter.alarmfade</string>
-			<key>key</key>
-			<string>fadeIsEnabledForAlarm</string>
-			<key>label</key>
-			<string>Enable Fade-In</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSEditTextCell</string>
-			<key>defaults</key>
-			<string>com.exormeter.alarmfade</string>
+			<string>PSLinkCell</string>
+			<key>cellClass</key>
+			<string>HBTintedTableCell</string>
 			<key>detail</key>
-			<string>PSDetailController</string>
-			<key>key</key>
-			<string>fadeInSecondsAlarm</string>
-			<key>label</key>
-			<string>Fade Duration</string>
-			<key>placeholder</key>
-			<string>120 seconds</string>
-			<key>keyboard</key>
-    		<string>phone</string>
-		</dict>
-
-
-
-
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Enable Timer</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
+			<string>AlarmRootListController</string>
+			<key>isController</key>
 			<true/>
-			<key>defaults</key>
-			<string>com.exormeter.alarmfade</string>
-			<key>key</key>
-			<string>isEnabledForTimer</string>
 			<key>label</key>
-			<string>Enable</string>
+			<string>Alarm Settings</string>
 		</dict>
 		<dict>
 			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Timer settings</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSliderCell</string>
-			<key>default</key>
-			<real>0.5</real> <!-- Default value of the slider -->
-			<key>defaults</key>
-			<string>com.exormeter.alarmfade</string> <!-- Your package name here -->
-			<key>key</key>
-			<string>maxVolumeTimer</string> <!-- Your key name here -->
-			<key>max</key>
-			<real>0.99</real> <!-- Enter your maximum value here -->
-			<key>min</key>
-			<real>0.07</real> <!-- Enter your minimum value here -->
-			<key>showValue</key> <!-- Show the value of the slider. true or false. -->
-			<false/>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<true/>
-			<key>defaults</key>
-			<string>com.exormeter.alarmfade</string>
-			<key>key</key>
-			<string>fadeIsEnabledForTimer</string>
-			<key>label</key>
-			<string>Enable Fade-In</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSEditTextCell</string>
-			<key>defaults</key>
-			<string>com.exormeter.alarmfade</string>
+			<string>PSLinkCell</string>
+			<key>cellClass</key>
+			<string>HBTintedTableCell</string>
 			<key>detail</key>
-			<string>PSDetailController</string>
-			<key>key</key>
-			<string>fadeInSecondsTimer</string>
+			<string>TimerRootListController</string>
+			<key>isController</key>
+			<true/>
 			<key>label</key>
-			<string>Fade Duration</string>
-			<key>placeholder</key>
-			<string>120 seconds</string>
-			<key>keyboard</key>
-    		<string>phone</string>
+			<string>Timer Settings</string>
 		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Please consider donating it helps a lot!</string>
+			<key>label</key>
+			<string>Donate</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>icon</key>
+			<string>paypal.png</string>
+			<key>label</key>
+			<string>Donate via PayPal</string>
+			<key>url</key>
+			<string>https://bit.ly/2uvwU0Z</string>
+		</dict>
+
+		
 	</array>
 	<key>title</key>
 	<string>AlarmFade</string>

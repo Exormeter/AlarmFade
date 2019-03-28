@@ -1,6 +1,6 @@
-#import <Preferences/PSListController.h>
+#import <CepheiPrefs/HBListController.h>
 
-@interface AFRootListController : PSListController
+@interface AFRootListController : HBListController
 
 @end
  

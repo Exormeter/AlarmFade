@@ -7,9 +7,11 @@
 
 
 
+
+
+
 ////////////ALARM
 @interface MTAlarmScheduler
-@property (nonatomic) float originalRingerVolume;
 @property (nonatomic) float currentVolume;
 @property (nonatomic) float volumeIncrement;
 @property (nonatomic) float maxVolume;
@@ -19,7 +21,6 @@
 @property (nonatomic, assign) AVSystemController* avSystemController;
 @property (nonatomic, assign) NSTimer* timer;
 -(void)onTick:(NSTimer *)timer;
--(void)restoreRingerVolume;
 -(void)stopTimer;
 -(void)updatePreferences;
 @end
@@ -32,7 +33,6 @@
 %hook MTAlarmScheduler
 
 
-%property (assign) float originalRingerVolume;
 %property (assign) float currentVolume;
 %property (assign) float maxVolume;
 %property (assign) float volumeIncrement;
@@ -45,7 +45,6 @@
 -(id)initWithStorage:(id)arg1 notificationCenter:(id)arg2 scheduler:(id)arg3{
     NSLog(@"Alarmfade Initialized");
     self.avSystemController = [%c(AVSystemController) sharedAVSystemController];
-    self.originalRingerVolume = DEFAULT_VOLUME;
     self.timer = nil;
 
     self.isEnabled = true;
@@ -64,21 +63,15 @@
     self.volumeIncrement = self.maxVolume / self.fadeSeconds;
     self.currentVolume = LOWEST_POSSIBLE_VOLUME;
 
-    float *originalVolume  = (float*) malloc(sizeof(float));
-    if(originalVolume){
-        [self.avSystemController getVolume: originalVolume forCategory:@"Ringtone"];
-        self.originalRingerVolume = *originalVolume;
-        free(originalVolume);
-    }
     
     if(self.fadeIsEnabled){
         if(self.fadeSeconds <= 0){
             return %orig;
         }
-        [self.avSystemController setVolumeTo: LOWEST_POSSIBLE_VOLUME forCategory:@"Ringtone"];
+        [self.avSystemController setVolumeTo: LOWEST_POSSIBLE_VOLUME forCategory:@"Alarm"];
     }
     else{
-        [self.avSystemController setVolumeTo: self.maxVolume forCategory:@"Ringtone"];
+        [self.avSystemController setVolumeTo: self.maxVolume forCategory:@"Alarm"];
     }
     
 
@@ -104,20 +97,20 @@
 -(void)updatePreferences{
     NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:settingsPath];
 
-    if([prefs objectForKey:@"isEnabledForAlarm"] != nil){
-        self.isEnabled = [[prefs objectForKey:@"isEnabledForAlarm"] boolValue];
+    if([prefs objectForKey:@"isEnabled"] != nil){
+        self.isEnabled = [[prefs objectForKey:@"isEnabled"] boolValue];
     }
     
-    if ([prefs objectForKey:@"fadeIsEnabledForAlarm"] != nil){
-         self.fadeIsEnabled = [[prefs objectForKey:@"fadeIsEnabledForAlarm"] boolValue];
+    if ([prefs objectForKey:@"fadeIsEnabled"] != nil){
+         self.fadeIsEnabled = [[prefs objectForKey:@"fadeIsEnabled"] boolValue];
     }
 
-    if([prefs objectForKey:@"fadeInSecondsAlarm"] != nil){
-        self.fadeSeconds = [[prefs objectForKey:@"fadeInSecondsAlarm"] intValue];
+    if([prefs objectForKey:@"fadein"] != nil){
+        self.fadeSeconds = [[prefs objectForKey:@"fadein"] intValue];
     }
 
-    if([prefs objectForKey:@"maxVolumeAlarm"] != nil){
-        self.maxVolume = [[prefs objectForKey:@"maxVolumeAlarm"] floatValue];
+    if([prefs objectForKey:@"maxVolume"] != nil){
+        self.maxVolume = [[prefs objectForKey:@"maxVolume"] floatValue];
     }
 
     [prefs release];
@@ -139,14 +132,6 @@
     
 }
 
-%new
--(void)restoreRingerVolume{
-    if(self.isEnabled){
-        NSLog(@"Reset Volume");
-        [self.avSystemController setVolumeTo: self.originalRingerVolume forCategory:@"Ringtone"];
-    }
-    
-}
 
 %new
 -(void)stopTimer{
@@ -155,7 +140,6 @@
         [self.timer invalidate];
         self.timer = nil;
     }
-    
 }
 
 %end
@@ -169,14 +153,12 @@
 
 -(void)dismissAlarmWithIdentifier:(id)arg1 dismissDate:(id)arg2 dismissAction:(unsigned long long)arg3 withCompletion:(/*^block*/id)arg4 source:(id)arg5{
     [self.scheduler stopTimer];
-    [self.scheduler restoreRingerVolume]; 
     NSLog(@"Dissmissed Alarm");
     return %orig;
 }
 
 -(void)snoozeAlarmWithIdentifier:(id)arg1 snoozeAction:(unsigned long long)arg2 withCompletion:(/*^block*/id)arg3 source:(id)arg4{
     [self.scheduler stopTimer];
-    [self.scheduler restoreRingerVolume]; 
     NSLog(@"Snoozed Alarm");
     return %orig;
 }
@@ -185,7 +167,7 @@
 
 ////TIMER
 
-@interface MTTimerScheduler
+@interface MTTimerStorage
 @property (nonatomic) float originalRingerVolume;
 @property (nonatomic) float currentVolume;
 @property (nonatomic) float volumeIncrement;
@@ -195,19 +177,14 @@
 @property (nonatomic) int fadeSeconds;
 @property (nonatomic, assign) AVSystemController* avSystemController;
 @property (nonatomic, assign) NSTimer* timer;
--(void)onTick:(NSTimer *)timer;
 -(void)restoreRingerVolume;
+-(void)onTick:(NSTimer *)timer;
 -(void)stopTimer;
 -(void)updatePreferences;
 @end
 
-@interface MTTimerStorage
-@property (assign,nonatomic,weak) MTTimerScheduler* scheduler;
-@end
 
-
-%hook MTTimerScheduler
-
+%hook MTTimerStorage
 
 %property (assign) float originalRingerVolume;
 %property (assign) float currentVolume;
@@ -219,10 +196,9 @@
 %property (nonatomic, assign) AVSystemController* avSystemController;
 %property (nonatomic, assign) NSTimer* timer;
 
--(id)initWithStorage:(id)arg1 notificationCenter:(id)arg2 scheduler:(id)arg3{
+-(id)init{
     NSLog(@"Timer Initialized");
     self.avSystemController = [%c(AVSystemController) sharedAVSystemController];
-    self.originalRingerVolume = DEFAULT_VOLUME;
     self.timer = nil;
 
     self.isEnabled = true;
@@ -232,7 +208,8 @@
     return %orig;
 }
 
--(void)_fireScheduledTimer:(id)arg1 firedDate:(id)arg2 completionBlock:(/*^block*/id)arg3 {
+
+-(void)_queue_notifyObserversForTimerFire:(id)arg1 source:(id)arg2{
     [self updatePreferences];
     if(!self.isEnabled){
         return %orig;
@@ -247,6 +224,7 @@
         self.originalRingerVolume = *originalVolume;
         free(originalVolume);
     }
+
     
     if(self.fadeIsEnabled){
         if(self.fadeSeconds <= 0){
@@ -271,11 +249,24 @@
     }
     
 
-    NSLog(@"Fired Alarm");
-    
-    %orig;
-
+    NSLog(@"Fired Timer");
 }
+
+-(void)dismissTimerWithIdentifier:(id)arg1 withCompletion:(/*^block*/id)arg2 source:(id)arg3{
+    [self stopTimer];
+    [self restoreRingerVolume];
+    NSLog(@"Dissmissed Timer");
+    return %orig;
+}
+
+-(void)repeatTimerWithIdentifier:(id)arg1 withCompletion:(/*^block*/id)arg2 source:(id)arg3{
+    [self stopTimer];
+    [self restoreRingerVolume];
+    NSLog(@"Repeated Timer");
+    return %orig;
+}
+
+
 
 %new
 -(void)updatePreferences{
@@ -316,14 +307,6 @@
     
 }
 
-%new
--(void)restoreRingerVolume{
-    if(self.isEnabled){
-        NSLog(@"Reset Volume");
-        [self.avSystemController setVolumeTo: self.originalRingerVolume forCategory:@"Ringtone"];
-    }
-    
-}
 
 %new
 -(void)stopTimer{
@@ -332,30 +315,15 @@
         [self.timer invalidate];
         self.timer = nil;
     }
+}
+
+%new
+-(void)restoreRingerVolume{
+    if(self.isEnabled){
+        NSLog(@"Reset Volume");
+        [self.avSystemController setVolumeTo: self.originalRingerVolume forCategory:@"Ringtone"];
+    }
     
-}
-
-%end
-
-
-
-
-%hook MTTimerStorage
-
-
-
--(void)dismissTimerWithIdentifier:(id)arg1 withCompletion:(/*^block*/id)arg2 source:(id)arg3{
-    [self.scheduler stopTimer];
-    [self.scheduler restoreRingerVolume]; 
-    NSLog(@"Dissmissed Timer");
-    return %orig;
-}
-
--(void)repeatTimerWithIdentifier:(id)arg1 withCompletion:(/*^block*/id)arg2 source:(id)arg3{
-    [self.scheduler stopTimer];
-    [self.scheduler restoreRingerVolume]; 
-    NSLog(@"Repeated Timer");
-    return %orig;
 }
 
 %end

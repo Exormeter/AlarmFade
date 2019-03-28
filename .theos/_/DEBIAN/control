@@ -1,10 +1,10 @@
 Package: com.exormeter.alarmfade
 Name: AlarmFade
-Depends: mobilesubstrate, preferenceloader
+Depends: mobilesubstrate, preferenceloader, ws.hbang.common
 Architecture: iphoneos-arm
 Description: Fades in the alarm
 Maintainer: Nils Kirchhof
 Author: Nils Kirchhof
 Section: Tweaks
-Version: 1.0.0-13+debug
-Installed-Size: 292
+Version: 1.0.0-59+debug
+Installed-Size: 336

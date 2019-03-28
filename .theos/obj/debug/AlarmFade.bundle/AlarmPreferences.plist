@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Enable for Alarms</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.exormeter.alarmfade</string>
+			<key>key</key>
+			<string>isEnabled</string>
+			<key>label</key>
+			<string>Enable</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Alarm settings</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<real>0.5</real> <!-- Default value of the slider -->
+			<key>defaults</key>
+			<string>com.exormeter.alarmfade</string> <!-- Your package name here -->
+			<key>key</key>
+			<string>maxVolume</string> <!-- Your key name here -->
+			<key>max</key>
+			<real>0.99</real> <!-- Enter your maximum value here -->
+			<key>min</key>
+			<real>0.07</real> <!-- Enter your minimum value here -->
+			<key>showValue</key> <!-- Show the value of the slider. true or false. -->
+			<false/>
+			<key>leftImage</key>
+			<string>speaker.png</string>
+			<key>rightImage</key>
+			<string>speaker_right.png</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.exormeter.alarmfade</string>
+			<key>key</key>
+			<string>fadeIsEnabled</string>
+			<key>label</key>
+			<string>Enable Fade-In</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>defaults</key>
+			<string>com.exormeter.alarmfade</string>
+			<key>detail</key>
+			<string>PSDetailController</string>
+			<key>key</key>
+			<string>fadein</string>
+			<key>label</key>
+			<string>Fade Duration</string>
+			<key>placeholder</key>
+			<string>120 Seconds</string>
+			<key>keyboard</key>
+    		<string>phone</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>Alarm Settings</string>
+</dict>
+</plist>
