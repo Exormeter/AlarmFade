@@ -33,8 +33,6 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<key>footerText</key>
-			<string>Please consider donating it helps a lot!</string>
 			<key>label</key>
 			<string>Donate</string>
 		</dict>

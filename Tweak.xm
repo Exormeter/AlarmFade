@@ -12,6 +12,7 @@
 
 ////////////ALARM
 @interface MTAlarmScheduler
+@property (nonatomic) float originalRingerVolume;
 @property (nonatomic) float currentVolume;
 @property (nonatomic) float volumeIncrement;
 @property (nonatomic) float maxVolume;
@@ -20,6 +21,7 @@
 @property (nonatomic) int fadeSeconds;
 @property (nonatomic, assign) AVSystemController* avSystemController;
 @property (nonatomic, assign) NSTimer* timer;
+-(void)restoreRingerVolume;
 -(void)onTick:(NSTimer *)timer;
 -(void)stopTimer;
 -(void)updatePreferences;
@@ -34,6 +36,7 @@
 
 
 %property (assign) float currentVolume;
+%property (assign) float originalRingerVolume;
 %property (assign) float maxVolume;
 %property (assign) float volumeIncrement;
 %property (assign) BOOL isEnabled;
@@ -55,26 +58,41 @@
 }
 
 -(void)_fireScheduledAlarm:(id)arg1 firedDate:(id)arg2 completionBlock:(/*^block*/id)arg3 {
+
+    //Check if preferences have changed since last alarm fire
     [self updatePreferences];
+
+    //If tweal is disabled, just fire the origianl _fireScheduledAlarm
     if(!self.isEnabled){
         return %orig;
     }
     
+    //Calculate the incements to reach the desired volume in the given time
     self.volumeIncrement = self.maxVolume / self.fadeSeconds;
+
     self.currentVolume = LOWEST_POSSIBLE_VOLUME;
 
+    //Read the original RingerVolume and save it to be restored after the alarm was dismissed
+    float *originalVolume  = (float*) malloc(sizeof(float));
+    if(originalVolume){
+        [self.avSystemController getVolume: originalVolume forCategory:@"Ringtone"];
+        self.originalRingerVolume = *originalVolume;
+        free(originalVolume);
+    }
+
     
+    //Set the volume to the lowest possible if fadeIn is enabled, to the desited volume otherwise
     if(self.fadeIsEnabled){
         if(self.fadeSeconds <= 0){
             return %orig;
         }
-        [self.avSystemController setVolumeTo: LOWEST_POSSIBLE_VOLUME forCategory:@"Alarm"];
+        [self.avSystemController setVolumeTo: LOWEST_POSSIBLE_VOLUME forCategory:@"Ringtone"];
     }
     else{
-        [self.avSystemController setVolumeTo: self.maxVolume forCategory:@"Alarm"];
+        [self.avSystemController setVolumeTo: self.maxVolume forCategory:@"Ringtone"];
     }
     
-
+    //If no timer is running, start a new time which increments the volume every second
     if(self.timer == nil && self.fadeIsEnabled){
         dispatch_async(dispatch_get_main_queue(), ^{
             NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval: TIMER_INTERVAL
@@ -120,6 +138,7 @@
 -(void)onTick:(NSTimer *)timer {
     NSLog(@"Timer active");
 
+    //Adds the incement to the volume if it wasn't reached yet. If volume was reached, terminate the timer
     if(self.currentVolume <= self.maxVolume){
         [self.avSystemController setActiveCategoryVolumeTo: self.currentVolume];
         self.currentVolume += self.volumeIncrement;
@@ -132,13 +151,22 @@
     
 }
 
-
+//This method is called when the alarm was dissmised
 %new
 -(void)stopTimer{
     NSLog(@"Timer stopped");
     if(self.timer != nil && [self.timer isValid]){
         [self.timer invalidate];
         self.timer = nil;
+    }
+}
+
+//After the alarm was dissmissed, restore the old ringtone value
+%new
+-(void)restoreRingerVolume{
+    if(self.isEnabled){
+        NSLog(@"Reset Volume");
+        [self.avSystemController setVolumeTo: self.originalRingerVolume forCategory:@"Ringtone"];
     }
 }
 
@@ -153,12 +181,14 @@
 
 -(void)dismissAlarmWithIdentifier:(id)arg1 dismissDate:(id)arg2 dismissAction:(unsigned long long)arg3 withCompletion:(/*^block*/id)arg4 source:(id)arg5{
     [self.scheduler stopTimer];
+    [self.scheduler restoreRingerVolume];
     NSLog(@"Dissmissed Alarm");
     return %orig;
 }
 
 -(void)snoozeAlarmWithIdentifier:(id)arg1 snoozeAction:(unsigned long long)arg2 withCompletion:(/*^block*/id)arg3 source:(id)arg4{
     [self.scheduler stopTimer];
+    [self.scheduler restoreRingerVolume];
     NSLog(@"Snoozed Alarm");
     return %orig;
 }
@@ -327,4 +357,3 @@
 }
 
 %end
-
